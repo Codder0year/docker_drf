@@ -5,10 +5,8 @@ class Command(BaseCommand):
     help = 'Создание тестовых пользователей'
 
     def handle(self, *args, **kwargs):
-        if User.objects.filter(username='test_admin').exists():
-            self.stdout.write(self.style.SUCCESS('Тестовые пользователи уже существуют.'))
-            return
-
-        # Создание тестовых пользователей
-        User.objects.create_user('test_3', 'test_user1@example.com', 'testpassword')
+        for i in range(1, 5):  # Создание 4 тестовых пользователей
+            email = f'test_user{i}@example.com'
+            if not User.objects.filter(email=email).exists():
+                User.objects.create_user(email, 'testpassword')
         self.stdout.write(self.style.SUCCESS('Тестовые пользователи успешно созданы!'))

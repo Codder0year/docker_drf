@@ -12,7 +12,7 @@ class PaymentsViewSet(viewsets.ModelViewSet):
     queryset = Payments.objects.all()
     serializer_class = PaymentsSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
-    filterset_fields = ('course', 'lesson', 'payment_method')
+    filterset_fields = ('course', 'lesson', 'payment_method', 'link')
     ordering_fields = ('payment_date',)
 
 class UserCreateAPIView(CreateAPIView):

@@ -7,10 +7,13 @@ class Command(BaseCommand):
     help = 'Создание платежей'
 
     def handle(self, *args, **kwargs):
-        # Пример данных, которые будут добавлены в таблицу Payments
         users = User.objects.all()
         courses = Course.objects.all()
         lessons = Lesson.objects.all()
+
+        if users.count() < 3:
+            self.stdout.write(self.style.ERROR('Недостаточно пользователей для создания платежей.'))
+            return
 
         # Добавляем платежи
         Payments.objects.create(
@@ -20,11 +23,12 @@ class Command(BaseCommand):
             payment_method='cash'
         )
 
-        Payments.objects.create(
-            user=users[3],
-            lesson=lessons[0],
-            amount=800.00,
-            payment_method='transfer'
-        )
+        if lessons.count() > 0:
+            Payments.objects.create(
+                user=users[3],
+                lesson=lessons[0],
+                amount=800.00,
+                payment_method='transfer'
+            )
 
         self.stdout.write(self.style.SUCCESS('Платежи успешно созданы!'))
