@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from users.models import User
 
+
 class Command(BaseCommand):
     help = 'Создание тестовых пользователей'
 
@@ -9,4 +10,6 @@ class Command(BaseCommand):
             email = f'test_user{i}@example.com'
             if not User.objects.filter(email=email).exists():
                 User.objects.create_user(email, 'testpassword')
-        self.stdout.write(self.style.SUCCESS('Тестовые пользователи успешно созданы!'))
+
+        self.stdout.write(self.style.SUCCESS('Тестовые пользователи'
+                                             ' успешно созданы!'))

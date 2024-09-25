@@ -6,6 +6,7 @@ from forex_python.converter import CurrencyRates
 # Инициализация ключа Stripe
 stripe.api_key = settings.STRIPE_API_KEY
 
+
 # Функция конвертации RUB в USD
 def convert_rub_to_usd(amount):
     """Конвертирует рубли в доллары."""
@@ -13,10 +14,12 @@ def convert_rub_to_usd(amount):
     rate = c.get_rate('RUB', 'USD')
     return int(amount * rate)
 
+
 # Создание продукта в Stripe
 def create_product():
     """Создает продукт в Stripe."""
     return stripe.Product.create(name="Payments")
+
 
 # Создание цены для продукта
 def create_stripe_price(amount):
@@ -26,6 +29,7 @@ def create_stripe_price(amount):
         unit_amount=int(amount * 100),  # Сумма в центах
         product_data={"name": "Payments"},
     )
+
 
 # Создание сессии для оплаты через Stripe
 def create_stripe_session(price_id):

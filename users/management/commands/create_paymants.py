@@ -12,7 +12,8 @@ class Command(BaseCommand):
         lessons = Lesson.objects.all()
 
         if users.count() < 3:
-            self.stdout.write(self.style.ERROR('Недостаточно пользователей для создания платежей.'))
+            self.stdout.write(self.style.ERROR('Недостаточно пользователей'
+                                               ' для создания платежей.'))
             return
 
         # Добавляем платежи

@@ -93,4 +93,3 @@ class CourseLessonTestCase(APITestCase):
         self.course.delete()
         self.user.delete()
         self.moderator_group.delete()
-

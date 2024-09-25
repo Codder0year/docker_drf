@@ -2,12 +2,14 @@ from rest_framework import serializers
 from materials.models import Course, Lesson, Subscription
 from materials.validators import validate_youtube_link
 
+
 class LessonSerializer(serializers.ModelSerializer):
     link = serializers.URLField(validators=[validate_youtube_link], required=False)
 
     class Meta:
         model = Lesson
         fields = '__all__'
+
 
 class CourseSerializer(serializers.ModelSerializer):
     lessons_count = serializers.SerializerMethodField()
