@@ -3,7 +3,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from .tasks import send_course_update_email
 from materials.models import Course, Lesson, Subscription
 from materials.paginators import CustomPagination
 from materials.serializers import CourseSerializer, LessonSerializer
@@ -20,6 +20,15 @@ class CourseViewSet(viewsets.ModelViewSet):
         course = serializer.save()
         course.owner = self.request.user
         course.save()
+
+    def perform_update(self, serializer):
+        course = serializer.save()
+        subscribers = Subscription.objects.filter(course=course).select_related('user')
+
+        # Асинхронная отправка писем подписчикам
+        for subscription in subscribers:
+            user_email = subscription.user.email
+            send_course_update_email.delay(user_email, course.name)
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
