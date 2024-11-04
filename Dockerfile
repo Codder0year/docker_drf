@@ -1,16 +1,24 @@
-FROM python:3.12
+FROM python:3.12-slim
+
+# Устанавливаем зависимости для Poetry и запуска приложения
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential curl && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Устанавливаем Poetry
+RUN curl -sSL https://install.python-poetry.org | python3 -
 
 # Устанавливаем рабочую директорию
 WORKDIR /app
 
-# Копируем файлы зависимостей
-COPY requirements.txt .
+# Копируем файлы с зависимостями Poetry (pyproject.toml и poetry.lock)
+COPY pyproject.toml poetry.lock /app/
 
-# Устанавливаем зависимости
-RUN pip install --no-cache-dir -r requirements.txt
+# Устанавливаем зависимости через Poetry
+RUN ~/.local/bin/poetry config virtualenvs.create false && \
+    ~/.local/bin/poetry install --no-dev
 
-# Копируем все файлы проекта в контейнер
-COPY . .
+# Копируем весь проект в контейнер
+COPY . /app
 
-# Запускаем сервер
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+# Указываем команду по умолчанию для контейнера в docker-compose.yaml
